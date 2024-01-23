@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Formulaire Dynamique</title>
+
+    <!-- Ajouter les liens CSS de Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy8RNAeLd5UluW2Cbxl5/1BdaJdA6B4W8j"
+          crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Générateur de Formulaire Dynamique</h1>
+
+        <form id="myForm">
+            <div class="form-group">
+                <label for="numFields">Nombre de champs :</label>
+                <input type="number" class="form-control" id="numFields" name="numFields" min="1" value="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="numButtons">Nombre de boutons :</label>
+                <input type="number" class="form-control" id="numButtons" name="numButtons" min="0" value="1" required>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="generateFieldsAndButtons()">Générer Champs et Boutons</button>
+
+            <div id="formFieldsAndButtons" class="mt-4">
+                <!-- Les champs et boutons seront ajoutés ici dynamiquement -->
+            </div>
+
+            <input type="submit" class="btn btn-success mt-3" value="Soumettre">
+            <button type="button" class="btn btn-secondary mt-3" onclick="downloadGeneratedCode()">Télécharger le code source</button>
+        </form>
+    </div>
+
+    <!-- Ajouter le script JavaScript de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+            integrity="sha384-gWp12RvG5Ndf5E0SgTz9sIoxCcW1LrOABu4LG5bIIgNjRfuEcbLRZ9T1RabF5qtX"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+
+    <script>
+        function generateFieldsAndButtons() {
+            var numFields = document.getElementById("numFields").value;
+            var numButtons = document.getElementById("numButtons").value;
+            var formFieldsAndButtonsContainer = document.getElementById("formFieldsAndButtons");
+
+            // Supprimer les champs et boutons existants
+            formFieldsAndButtonsContainer.innerHTML = '';
+
+            // Ajouter les nouveaux champs
+            for (var i = 1; i <= numFields; i++) {
+                // Créer une nouvelle div avec la classe Bootstrap
+                var fieldDiv = document.createElement("div");
+                fieldDiv.classList.add("form-group");
+
+                // Ajouter un label pour le champ
+                var label = document.createElement("label");
+                label.setAttribute("for", "field" + i);
+                label.textContent = "Champ " + i + " :";
+                fieldDiv.appendChild(label);
+
+                // Ajouter un champ de texte
+                var input = document.createElement("input");
+                input.setAttribute("type", "text");
+                input.setAttribute("class", "form-control");
+                input.setAttribute("id", "field" + i);
+                input.setAttribute("name", "field" + i);
+                fieldDiv.appendChild(input);
+
+                // Ajouter la nouvelle div au conteneur
+                formFieldsAndButtonsContainer.appendChild(fieldDiv);
+            }
+
+            // Ajouter les nouveaux boutons
+            for (var j = 1; j <= numButtons; j++) {
+                // Créer une nouvelle div avec la classe Bootstrap
+                var buttonDiv = document.createElement("div");
+                buttonDiv.classList.add("form-group");
+
+                // Ajouter un bouton
+                var button = document.createElement("button");
+                button.setAttribute("type", "button");
+                button.setAttribute("class", "btn btn-secondary");
+                button.textContent = "Bouton " + j;
+                button.onclick = function() {
+                    alert("Bouton " + j + " cliqué !");
+                };
+                buttonDiv.appendChild(button);
+
+                // Ajouter la nouvelle div au conteneur
+                formFieldsAndButtonsContainer.appendChild(buttonDiv);
+            }
+        }
+
+        function downloadGeneratedCode() {
+            var formElement = document.getElementById("myForm");
+            var formOpeningTag = "<form id=\"myForm\">";
+            var formFieldsAndButtons = document.getElementById("formFieldsAndButtons").innerHTML;
+            var formClosingTag = "</form>";
+            var generatedCode = formOpeningTag + formFieldsAndButtons + formClosingTag;
+
+            // Créer un objet Blob avec le code généré
+            var blob = new Blob([generatedCode], { type: "text/html" });
+
+            // Créer un lien de téléchargement
+            var link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = "formulaire_generé.html"; // Nom du fichier à télécharger
+
+            // Ajouter le lien à la page
+            document.body.appendChild(link);
+
+            // Déclencher le clic sur le lien pour démarrer le téléchargement
+            link.click();
+
+            // Retirer le lien de la page
+            document.body.removeChild(link);
+        }
+    </script>
+
+</body>
+</html>
